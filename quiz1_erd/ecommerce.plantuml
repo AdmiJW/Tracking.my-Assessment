@@ -1,0 +1,114 @@
+@startuml
+
+title E-commerce ERD - Written using PlantUML
+
+' Turn off default icon for visibility of fields, like private, public, protected
+skinparam classAttributeIconSize 0
+
+
+' Entities
+class Customer {
+    - int id
+    - String name
+    - String email
+    - String phone_number
+    - String password_hash
+    
+    - int shipping_address_id
+    - int billing_address_id
+}
+
+
+
+class Address {
+  - int id
+  - String street
+  - String city
+  - String state
+  - String zip_code
+  - String country
+}
+
+
+class Category {
+    - int id
+    - String name
+    - String description
+}
+
+
+class Product { 
+    - int id
+    - int stock_quantity
+    - String name
+    - String description
+    - double price
+    - String imageUrl
+
+    - int category_id
+}
+
+
+class Order {
+    - int id
+    - int quantity
+    - DateTime order_date
+    - double total_price
+    - String shipping_address
+    - String billing_address
+    - String order_status
+
+    - int customer_id
+    - int product_id
+}
+
+
+class Payment {
+    - int id
+    - String payment_method
+    - double payment_amout
+    - String payment_status
+    - DateTime payment_date
+    - String payment_reference
+    
+    - int order_id
+}
+
+
+class Cart {
+    - int id
+    - int quantity
+
+    - int customer_id
+    - int product_id
+}
+
+
+class Review {
+    - int id
+    - DateTime timestamp
+    - double rating
+    - String comment 
+    
+    - int customer_id
+    - int order_id
+    - int product_id
+}
+
+
+
+' Relationship declarations
+Customer ||--o{  Order
+Customer ||--o{ Cart
+Customer ||--o{ Address : billing address
+Customer ||--o{ Address : shipping address
+Product }|--|| Category
+Product }|--o{ Order
+Product ||--o{ Cart
+Order ||--|| Payment
+Review }o--|| Customer
+Review ||--|| Order
+Review }o--|| Product
+
+
+@enduml
