@@ -3,152 +3,53 @@
 
 <head>
 	<title>Reversi Game</title>
-	<style type="text/css">
-		[v-cloak] {
-			display: none;
-		}
-
-		p {
-			text-align: center;
-		}
-
-		#flex {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-
-		table {
-			border-spacing: 0;
-			border: 1px solid #444;
-		}
-
-		td {
-			background: #27AE60;
-			border: 1px solid #444;
-			width: 60px;
-			height: 60px;
-		}
-
-		tr:nth-child(odd) td:nth-child(odd),
-		tr:nth-child(even) td:nth-child(even) {
-			background: #229954;
-		}
-
-		.piece-W::before,
-		.piece-B::before {
-			content: "";
-			display: block;
-			width: 48px;
-			height: 48px;
-			margin: 6px;
-			border-radius: 50%;
-			box-shadow: 1px 1px 5px #000000;
-		}
-
-		.piece-W::before {
-			background-image: linear-gradient(#FFF, #CCC);
-		}
-
-		.piece-B::before {
-			background-image: linear-gradient(#555, #000);
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="./style.css"/>
 </head>
 
+
 <body>
-	<div id="app" v-cloak>
-		<p>Current turn: {{ turn == 'W' ? 'White' : 'Black' }}'s player</p>
-		<div id="flex">
-			<table>
-				<tr v-for="(row, rowKey, index) in game" :key="rowKey">
-					<td v-for="(col, colKey, index) in row" :key="colKey" :class="col ? 'piece-'+col : ''"
-						@click="click(rowKey, colKey)">
-					</td>
-				</tr>
-			</table>
-		</div>
+<div id="app" v-cloak>
+
+	<p>
+		Current turn: {{ state.turn.piece == 'W' ? 'White' : 'Black' }}'s move
+	</p>
+
+	<p>Black: {{ state.blackScore }} | White: {{ state.whiteScore }}</p>
+
+	<p v-if="state.tipMove">
+		Tip: Row {{ state.tipMove.x }} Col {{ state.tipMove.y }}</p>
+	</p>
+
+	<p>
+		<button @click="reset()">Reset</button>
+		<button @click="undo()" :disabled="history.length === 0">Undo</button>
+		<button @click="toggleMode()">
+			{{ mode === "AI" ? "Play against a friend" : "Play against AI" }}
+		</button>
+	</p>
+
+
+
+	<!-- Board -->
+	<div id="flex">
+		<table>
+			<tr v-for="(row, rowKey, index) in state.board" :key="rowKey">
+				<td 
+					v-for="(col, colKey, index) in row" 
+					:key="colKey" 
+					:class="col ? 'piece-' + col : isAnAvailableMove(rowKey, colKey)? 'possible-move': '' "
+					@click="click(rowKey, colKey)"
+				>
+				</td>
+			</tr>
+		</table>
 	</div>
+</div>
 
-	<!-- Quiz test instructions:
-	==========================
-	1. Check slot available
-	2. Flipped over opponent's piece
-	3. Write victory condition
-	4. Write draw condition
-	5. Show where you can put the piece
-	6. Score display
-	7. Regret piece
-	8. Play by tip
-	9. Player vs Computer
-	==========================
-	* Try your best to complete the above quiz
-	* You may skip the task when you can't complete it -->
 
-	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-	<script type="text/javascript">
-		var app = new Vue({
-			el: '#app',
-			data: {
-				turn: 'W',
-				game: [
-					['', '', '', '', '', '', '', ''],
-					['', '', '', '', '', '', '', ''],
-					['', '', '', '', '', '', '', ''],
-					['', '', '', 'W', 'B', '', '', ''],
-					['', '', '', 'B', 'W', '', '', ''],
-					['', '', '', '', '', '', '', ''],
-					['', '', '', '', '', '', '', ''],
-					['', '', '', '', '', '', '', '']
-				],
-				// direction: [
-				// 	[-1,0],
-				// 	[0,1],
-				// 	[1,0],
-				// 	[0,-1],
-				// 	[-1,-1],
-				// 	[-1,1],
-				// 	[1,1],
-				// 	[1,-1]
-				// ]
-			},
-			methods: {
-				click(row, col) {
-					if (this.game[row][col] != '') {
-						alert('Please select empty slot.')
-						return
-					}
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="./script.js"></script>
 
-					// Check slot available
-					// if(not available condition){
-					// alert('You cannot select this slot.')
-					// return
-					// }
-
-					this.game[row].splice(col, 1, this.turn)
-
-					// Flipped over opponent's piece
-					// ....
-					// ....
-					// ....
-
-					// Victory
-					// if(victory condition){
-					// alert('Player '+this.turn+' winner!')
-					// return
-					// }
-
-					// Draw
-					// if(draw condition){
-					// alert('Draw!');
-					// return
-					// }
-
-					this.turn = this.turn == 'W' ? 'B' : 'W'
-				}
-			}
-		})
-	</script>
 </body>
 
 </html>
