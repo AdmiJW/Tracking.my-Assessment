@@ -1,6 +1,6 @@
 # Laravel Todo
 
-This todo application is built using `Laravel` and `laravel/breeze` starter kit by AdmiJW. To run on dev environment, run
+This todo application is built using `Laravel` and `laravel/breeze` starter kit. To run on dev environment, run
 
 ```bash
 php artisan migrate     # Create DB tables
